@@ -57,6 +57,13 @@ func leComando() int {
 
 func iniciarMonitoramento() {
 	fmt.Println("Monitorando...")
+	var sites [4]string
+	sites[0] = "https://httpbin.org/status/200"
+	sites[1] = "https:www.alura.com.br"
+	sites[2] = "https://www.caelum.edu.br"
+
+	fmt.Println(sites)
+
     // site com URL inexistente
     site := "https://httpbin.org/status/200" // ou 404
     resp, _ := http.Get(site)
