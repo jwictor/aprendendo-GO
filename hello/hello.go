@@ -2,36 +2,39 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"net/http"
+	"os"
+	"time"
 )
 
+const monitoramentos = 3
+const delay = 5
 
 func main() {
 
 	exibeIntroducao()
 
 	for {
-		
-	exibeMenu()
 
-	comando := leComando()
+		exibeMenu()
 
-	switch comando {
-	case 1:
-		iniciarMonitoramento()
-	case 2:
-		fmt.Println("Exibindo Logos...")
-	case 0:
-		fmt.Println("Saindo do Programa...")
-		os.Exit(0)
-	default:
-		fmt.Println("Não conheço este comando")
-		os.Exit(-1)
+		comando := leComando()
+
+		switch comando {
+		case 1:
+			iniciarMonitoramento()
+		case 2:
+			fmt.Println("Exibindo Logos...")
+		case 0:
+			fmt.Println("Saindo do Programa...")
+			os.Exit(0)
+		default:
+			fmt.Println("Não conheço este comando")
+			os.Exit(-1)
+		}
+
 	}
 
-	}
-	
 }
 
 func exibeIntroducao() {
@@ -51,26 +54,34 @@ func leComando() int {
 	var comandoLido int
 	fmt.Scan(&comandoLido)
 	fmt.Println("O comando escolhido foi", comandoLido)
+	fmt.Println(" ")
 
 	return comandoLido
 }
 
 func iniciarMonitoramento() {
 	fmt.Println("Monitorando...")
-	var sites [4]string
-	sites[0] = "https://httpbin.org/status/200"
-	sites[1] = "https:www.alura.com.br"
-	sites[2] = "https://www.caelum.edu.br"
+	sites := []string{"https://httpbin.org/status/200", "https://www.alura.com.br", "https://unificacao.rosamaster.com/"}
 
-	fmt.Println(sites)
+	for i := 0; i < monitoramentos; i++ {
+		for i, site := range sites {
+			fmt.Println("Testando site", i, ":", site)
+			testaSite(site)
+		}
+		time.Sleep(delay * time.Second)
+		fmt.Println(" ")
+	}
 
-    // site com URL inexistente
-    site := "https://httpbin.org/status/200" // ou 404
-    resp, _ := http.Get(site)
+	fmt.Println(" ")
+
+}
+
+func testaSite(site string) {
+	resp, _ := http.Get(site)
 
 	if resp.StatusCode == 200 {
 		fmt.Println("Site:", site, "foi carregado com sucesso!")
 	} else {
 		fmt.Println("Site:", site, "está com problemas. Status Code:", resp.StatusCode)
-    }
+	}
 }
